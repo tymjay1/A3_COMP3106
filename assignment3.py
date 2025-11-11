@@ -108,21 +108,19 @@ class td_qlearning:
         self.q_function[state][action] = getReward(state)
 
     prev_q_function = None
-    itr = 0
-    max_itr = 1000
-    while itr < max_itr and not isConverge(self.q_function, prev_q_function):
+    while not isConverge(self.q_function, prev_q_function):
       prev_q_function = copy.deepcopy(self.q_function)
 
-      for trial in trials:
-        for i in range(len(trial)-1): # -1 because we don't calculate Q-value for terminate state-action pair
-          cur_state = trial[i][0]
-          cur_action = trial[i][1]
-          next_state = trial[i+1][0]
-          next_action = trial[i+1][1]
+      for itr in range(1000):
+        for trial in trials:
+          for i in range(len(trial)-1): # -1 because we don't calculate Q-value for terminate state-action pair
+            cur_state = trial[i][0]
+            cur_action = trial[i][1]
+            next_state = trial[i+1][0]
+            next_action = trial[i+1][1]
 
-          error_term = getReward(cur_state) + self.gamma * max(self.q_function[next_state].values()) - self.q_function[cur_state][cur_action]
-          self.q_function[cur_state][cur_action] += self.alpha * error_term
-      itr += 1
+            error_term = getReward(cur_state) + self.gamma * max(self.q_function[next_state].values()) - self.q_function[cur_state][cur_action]
+            self.q_function[cur_state][cur_action] += self.alpha * error_term
     # Return nothing
 
   def qvalue(self, state, action):
@@ -156,5 +154,5 @@ if __name__ == "__main__":
   # Example: python3 assignment3.py Examples/Example0/Trials
 
   tdq = td_qlearning(sys.argv[1])
-  print(tdq.policy("13/0/0/-"))
-  print(tdq.qvalue("13/0/0/-", 2))
+  print(tdq.policy("11/1/1/-"))
+  print(tdq.qvalue("8/3/2/-", 2))
